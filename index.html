@@ -1863,67 +1863,74 @@
   liv's Setlist Records · 2026 · updated regularly
 </footer>
 
+
 <script>
   function toggleMonth(id) {
     const el = document.getElementById(id);
     el.classList.toggle('open');
   }
+
   function toggleSession(id) {
     const el = document.getElementById(id);
     el.classList.toggle('open');
+
     const btn = el.querySelector('.session-toggle-btn');
-    if (btn) btn.style.transform = el.classList.contains('open') ? 'rotate(180deg)' : '';
+    if (btn) {
+      btn.style.transform = el.classList.contains('open')
+        ? 'rotate(180deg)'
+        : '';
+    }
   }
-  // document.getElementById('m01').classList.add('open');
+
+  function updateStats() {
+    const monthBlocks = document.querySelectorAll('.month-block');
+
+    let totalStreams = 0;
+    let totalSongs = 0;
+
+    monthBlocks.forEach(block => {
+      const sessions = block.querySelectorAll('.session').length;
+      const songs = block.querySelectorAll('.song-row').length;
+
+      totalStreams += sessions;
+      totalSongs += songs;
+
+      const meta = block.querySelector('.month-meta');
+
+      if (meta) {
+        meta.textContent = `${sessions} streams · ${songs} songs`;
+      }
+    });
+
+    document.querySelectorAll('.stat').forEach(stat => {
+      const label = stat.querySelector('.stat-l')?.textContent.trim();
+      const num = stat.querySelector('.stat-n');
+
+      if (!label || !num) return;
+
+      if (label === 'streams') {
+        num.textContent = totalStreams;
+      }
+
+      if (label === 'songs total') {
+        num.textContent = totalSongs;
+      }
+
+      if (label === 'updating') {
+        const last = new Date(document.lastModified);
+
+        const y = last.getFullYear();
+        const m = String(last.getMonth() + 1).padStart(2, '0');
+        const d = String(last.getDate()).padStart(2, '0');
+
+        num.innerHTML = `<span class="accent">●</span> ${y}/${m}/${d}`;
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    updateStats();
+  });
 </script>
 </body>
 </html>
-
-<script>
-
-<script>
-  // ▼ 月ごとの sessions / songs を自動計算
-  document.querySelectorAll('.month-block').forEach(block => {
-    const sessions = block.querySelectorAll('.session-block, .session').length;
-    const songs = block.querySelectorAll('.song-row').length;
-
-    const meta = block.querySelector('.month-meta');
-    if (meta) {
-      meta.textContent = `${sessions} streams · ${songs} songs`;
-    }
-  });
-
-  // ▼ stats の更新（セレクタを安全に取得）
-  const stats = document.querySelectorAll('.stat');
-
-  stats.forEach(stat => {
-    const label = stat.querySelector('.stat-l')?.textContent.trim();
-    const num = stat.querySelector('.stat-n');
-
-    if (!label || !num) return;
-
-    if (label === 'streams') {
-      num.textContent = document.querySelectorAll('.session-block, .session').length;
-    }
-
-    if (label === 'songs total') {
-      num.textContent = document.querySelectorAll('.song-row').length;
-    }
-  });
-
-  // ▼ updating（最終更新日）
-  const last = new Date(document.lastModified);
-  const y = last.getFullYear();
-  const m = String(last.getMonth() + 1).padStart(2, '0');
-  const d = String(last.getDate()).padStart(2, '0');
-  const formatted = `${y}/${m}/${d}`;
-
-  const updatingStat = Array.from(stats).find(stat =>
-    stat.querySelector('.stat-l')?.textContent.trim() === 'updating'
-  );
-
-  if (updatingStat) {
-    updatingStat.querySelector('.stat-n').innerHTML = `<span class="accent">●</span> ${formatted}`;
-  }
-</script>
-
