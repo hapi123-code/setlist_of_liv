@@ -1365,31 +1365,50 @@
 </html>
 
 <script>
- 
-<script>
-  // 月ごとの曲数を自動計算
-  document.querySelectorAll('.month-block').forEach(block => {
-    const songs = block.querySelectorAll('.song-row').length;
-    const meta = block.querySelector('.month-meta');
 
+<script>
+  // ▼ 月ごとの sessions / songs を自動計算
+  document.querySelectorAll('.month-block').forEach(block => {
+    const sessions = block.querySelectorAll('.session-block, .session').length;
+    const songs = block.querySelectorAll('.song-row').length;
+
+    const meta = block.querySelector('.month-meta');
     if (meta) {
-      const text = meta.textContent;
-      const updated = text.replace(/(\d+)\s*songs/, `${songs} songs`);
-      meta.textContent = updated;
+      meta.textContent = `${sessions} streams · ${songs} songs`;
     }
   });
+
+  // ▼ stats の更新（セレクタを安全に取得）
+  const stats = document.querySelectorAll('.stat');
+
+  stats.forEach(stat => {
+    const label = stat.querySelector('.stat-l')?.textContent.trim();
+    const num = stat.querySelector('.stat-n');
+
+    if (!label || !num) return;
+
+    if (label === 'streams') {
+      num.textContent = document.querySelectorAll('.session-block, .session').length;
+    }
+
+    if (label === 'songs total') {
+      num.textContent = document.querySelectorAll('.song-row').length;
+    }
+  });
+
+  // ▼ updating（最終更新日）
+  const last = new Date(document.lastModified);
+  const y = last.getFullYear();
+  const m = String(last.getMonth() + 1).padStart(2, '0');
+  const d = String(last.getDate()).padStart(2, '0');
+  const formatted = `${y}/${m}/${d}`;
+
+  const updatingStat = Array.from(stats).find(stat =>
+    stat.querySelector('.stat-l')?.textContent.trim() === 'updating'
+  );
+
+  if (updatingStat) {
+    updatingStat.querySelector('.stat-n').innerHTML = `<span class="accent">●</span> ${formatted}`;
+  }
 </script>
 
-<script>
-  // ▼ 全体の months
-  // const totalMonths = document.querySelectorAll('.month-block').length;
-  // document.querySelector('.stat-l:contains("months")').previousElementSibling.textContent = totalMonths;
-
-  // ▼ 全体の streams
-  const totalstreams = document.querySelectorAll('.session-block').length;
-  document.querySelector('.stat-l:contains("streams")').previousElementSibling.textContent = totalstreams;
-
-  // ▼ 全体の songs total
-  const totalSongs = document.querySelectorAll('.song-row').length;
-  document.querySelector('.stat-l:contains("songs total")').previousElementSibling.textContent = totalSongs;
-</script>
