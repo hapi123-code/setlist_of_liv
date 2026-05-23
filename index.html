@@ -292,7 +292,7 @@
   }
   .session.open .song-list { display: block; }
 
-  .song-row {
+  /* .song-row {
     display: flex;
     align-items: baseline;
     gap: 10px;
@@ -320,7 +320,36 @@
     margin-left: auto;
     text-align: right;
     flex-shrink: 0;
-  }
+  } */
+ 
+ .song-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.song-idx {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--text3);
+  min-width: 18px;
+}
+
+.song-name {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 400;
+}
+
+.song-artist {
+  font-size: 11px;
+  color: var(--text3);
+  font-weight: 300;
+  margin-left: 0;
+  text-align: left;
+}
 
   /* ── FOOTER ── */
   footer {
@@ -338,7 +367,7 @@
     .container { padding: 1.75rem 1.25rem 3rem; }
     .stats { flex-wrap: wrap; }
     .stat { padding: 1rem 1.25rem; }
-    .song-artist { display: none; }
+    /* .song-artist { display: none; } */
   }
 </style>
 </head>
@@ -1067,7 +1096,7 @@
     const btn = el.querySelector('.session-toggle-btn');
     if (btn) btn.style.transform = el.classList.contains('open') ? 'rotate(180deg)' : '';
   }
-  document.getElementById('m01').classList.add('open');
+  // document.getElementById('m01').classList.add('open');
 </script>
 </body>
 </html>
